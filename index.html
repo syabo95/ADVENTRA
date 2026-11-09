@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADVENTRA</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3e8de;color:#29221e;font-family:Arial,sans-serif}
+header{text-align:center;padding:25px 15px}
+.logo{font:30px Georgia;letter-spacing:1px}
+.tag{font-size:9px;letter-spacing:3px;margin-top:4px}
+main{max-width:500px;margin:auto;padding:15px 22px 30px}
+h1,h2{font-family:Georgia,serif;font-weight:normal}
+h1{font-size:26px;margin-bottom:5px}
+.sub,.muted{color:#96877d;font-size:12px}
+input,textarea{width:100%;padding:15px;border:1px solid #e5d6c9;border-radius:18px;background:#fffaf5;font-size:14px}
+textarea{min-height:130px}
+button{cursor:pointer}
+.primary{background:#347b47;color:white;border:0;border-radius:28px;padding:14px 22px}
+.secondary{background:#fffaf5;border:0;border-radius:25px;padding:13px 20px}
+.addbar{display:flex;gap:8px;margin:20px 0 7px}
+.addbar input{border-radius:30px}
+.hero{height:125px;border-radius:20px;background:linear-gradient(120deg,#263d34,#91a18a);color:white;display:flex;align-items:end;padding:20px;margin:25px 0;font:23px Georgia}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{height:100px;border-radius:16px;padding:15px;color:white;display:flex;align-items:end;font:17px Georgia;background:linear-gradient(135deg,#594234,#b28d6c)}
+.tile:nth-child(2){background:linear-gradient(135deg,#51453b,#a58d76)}
+.tile:nth-child(3){background:linear-gradient(135deg,#37463b,#a68a70)}
+.tile:nth-child(4){background:linear-gradient(135deg,#536d60,#b6c0a4)}
+.tile:nth-child(5){background:linear-gradient(135deg,#252321,#9b7761)}
+.tile:nth-child(6){background:linear-gradient(135deg,#765b49,#c4a17e)}
+.tile:nth-child(7){background:linear-gradient(135deg,#644d37,#bd9b72)}
+.tile:nth-child(8){background:linear-gradient(135deg,#282a2b,#82786b)}
+.card,.category{background:#fff8f0;border-radius:18px;padding:15px;margin:12px 0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.category summary{cursor:pointer;font:17px Georgia}
+.place{padding:12px 0;border-top:1px solid #eee1d5;margin-top:10px;font-size:13px}
+.item{display:flex;justify-content:space-between;gap:8px;margin-top:8px;font-size:13px}
+.small{border:0;background:none;color:#347b47;font-size:12px}
+.hidden{display:none!important}
+.modal{position:fixed;inset:0;background:#211c1966;display:none;align-items:center;justify-content:center;padding:22px}
+.modalbox{background:white;border-radius:25px;padding:28px 22px;width:100%;max-width:420px;text-align:center}
+.progress{height:6px;background:#ddd;border-radius:10px;margin:15px 0 35px;overflow:hidden}
+.progress span{display:block;height:100%;width:0;background:#08b58a;transition:width .4s}
+.step{text-align:left;font-size:13px;margin:12px 0}
+.success{text-align:center;padding:35px 5px}
+.check{font-size:65px;color:#08a878}
+footer{text-align:center;color:#9b8c80;font-size:10px;padding:15px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">ADVENTRA</div>
+<div class="tag">DISCOVER · ARCHIVE · EXPLORE</div>
+</header>
+
+<main id="home">
+<h1>Good Evening</h1>
+<div class="sub">Where shall we explore next?</div>
+<div class="addbar">
+<input id="url" placeholder="Paste a link to save your inspiration...">
+<button class="primary" onclick="startImport()">+</button>
+</div>
+<div class="muted" style="text-align:center">Threads · Instagram · TikTok · Websites</div>
+<div class="hero">✧ Trips</div>
+<div class="grid">
+<div class="tile">♧ Foods</div>
+<div class="tile">♙ Stamp Hunting</div>
+<div class="tile">⌂ Hotels</div>
+<div class="tile">♧ Nature Activities</div>
+<div class="tile">◎ Movies</div>
+<div class="tile">♧ Shopping</div>
+<div class="tile">♡ Interest</div>
+<div class="tile">♫ Music</div>
+</div>
+</main>
+
+<main id="review" class="hidden">
+<h1>Review your inspiration</h1>
+<p class="sub">Here's what we found from your link.</p>
+<div class="card">
+<div class="muted">SOURCE LINK</div>
+<div id="source" style="font-size:13px;word-break:break-all"></div>
+</div>
+<div class="card">
+<strong>ADVENTRA AI Analysis</strong>
+<p class="muted">Paste the post caption or travel recommendations below.</p>
+<textarea id="caption" placeholder="Paste your travel content here..."></textarea>
+</div>
+<div class="row">
+<h3 style="font:normal 19px Georgia">Extracted & Organised</h3>
+<button class="small" onclick="organise()">↻ Organise</button>
+</div>
+<div id="results"></div>
+<button class="primary" style="width:100%;margin-top:18px" onclick="saveAll()">▣ Confirm & Save</button>
+<button class="secondary" style="width:100%;margin-top:9px" onclick="goHome()">Cancel</button>
+</main>
+
+<main id="success" class="hidden">
+<div class="success">
+<div class="check">✓</div>
+<h1 style="color:#347b47">Successfully Saved!</h1>
+<p class="sub">Your travel inspiration has been organised into your lists.</p>
+<div class="card" id="savedSummary"></div>
+<button class="primary" onclick="showLists()">View Lists</button>
+<button class="secondary" style="margin-top:10px" onclick="goHome()">Add Link</button>
+</div>
+</main>
+
+<main id="lists" class="hidden">
+<h1>Your Lists</h1>
+<p class="sub">Your saved travel inspiration.</p>
+<div id="listContent"></div>
+<button class="secondary" onclick="goHome()">← Home</button>
+</main>
+
+<div class="modal" id="processing">
+<div class="modalbox">
+<div class="progress"><span id="bar"></span></div>
+<h2>Organizing your travel inspiration</h2>
+<div id="steps"></div>
+<button id="reviewBtn" class="primary hidden" onclick="finishProcessing()">Review</button>
+</div>
+</div>
+<footer>ADVENTRA · DISCOVER · ARCHIVE · EXPLORE</footer>
+
+<script>
+let extracted={};
+let saved=JSON.parse(localStorage.getItem("adventra")||"{}");
+const categories=["Foods","Hotels","Nature Activities","Stamp Hunting","Shopping","Movies","Music","Interest","Trips"];
+
+function page(id){
+["home","review","success","lists"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+document.getElementById(id).classList.remove("hidden");
+}
+function goHome(){page("home")}
+function startImport(){
+let link=document.getElementById("url").value.trim();
+if(!link){alert("Paste a link first!");return}
+document.getElementById("source").textContent=link;
+document.getElementById("caption").value="";
+document.getElementById("processing").style.display="flex";
+document.getElementById("reviewBtn").classList.add("hidden");
+let tasks=["Reading content from link","Detecting destination","Extracting places, foods & activities","Sorting into your lists"];
+document.getElementById("steps").innerHTML="";
+document.getElementById("bar").style.width="0";
+tasks.forEach((t,i)=>{
+setTimeout(()=>{
+document.getElementById("steps").innerHTML+=`<div class="step">✓ ${t}</div>`;
+document.getElementById("bar").style.width=((i+1)*25)+"%";
+if(i===3)document.getElementById("reviewBtn").classList.remove("hidden");
+},(i+1)*650);
+});
+}
+function finishProcessing(){
+document.getElementById("processing").style.display="none";
+page("review");organise();
+}
+function organise(){
+let text=document.getElementById("caption").value.trim();
+extracted={};
+if(!text){
+document.getElementById("results").innerHTML='<p class="muted">Paste a caption or text above, then tap Organise.</p>';
+return;
+}
+let lines=text.split(/\n|,/).map(x=>x.trim()).filter(Boolean);
+let destination="Other";
+let match=text.match(/(?:in|at|from|destination[: ]+)\s*([A-Z][a-zA-Z ]{2,30})/);
+if(match)destination=match[1].trim();
+let groups={};
+categories.forEach(c=>groups[c]=[]);
+lines.forEach(line=>{
+let l=line.toLowerCase(),cat="Interest";
+if(/restaurant|food|cafe|coffee|eat|halal|bakery|tom yum|nasi|mee|pizza/.test(l))cat="Foods";
+else if(/hotel|resort|stay|hostel|accommodation/.test(l))cat="Hotels";
+else if(/waterfall|hiking|beach|park|lake|nature|mountain/.test(l))cat="Nature Activities";
+else if(/stamp|post office|postcard/.test(l))cat="Stamp Hunting";
+else if(/shop|market|mall|store/.test(l))cat="Shopping";
+else if(/movie|film|cinema/.test(l))cat="Movies";
+else if(/music|vinyl|concert/.test(l))cat="Music";
+else if(/itinerary|day \d|trip|travel plan/.test(l))cat="Trips";
+if(!groups[cat].includes(line))groups[cat].push(line);
+});
+Object.keys(groups).forEach(c=>{
+if(groups[c].length)extracted[c]=groups[c].map(name=>({name,location:destination}));
+});
+renderResults();
+}
+function renderResults(){
+let html="";
+Object.entries(extracted).forEach(([cat,items])=>{
+html+=`<details class="category" open><summary>${cat} (${items.length})</summary>`;
+let locs={};
+items.forEach((it,i)=>(locs[it.location]??=[]).push({...it,index:i}));
+Object.entries(locs).forEach(([loc,arr])=>{
+html+=`<div class="place"><div class="row"><strong>${loc} (${arr.length})</strong><button class="small" onclick="addItem('${cat}')">+ Add</button></div>`;
+arr.forEach(it=>html+=`<div class="item"><span>${it.name}</span><button class="small" onclick="removeItem('${cat}',${it.index})">Remove</button></div>`);
+html+="</div>";
+});
+html+="</details>";
+});
+document.getElementById("results").innerHTML=html||'<p class="muted">No items found yet. Add some text above.</p>';
+}
+function addItem(cat){
+let name=prompt("Enter a place or item:");
+if(!name)return;
+let location=prompt("Which city or location?")||"Other";
+extracted[cat].push({name,location});renderResults();
+}
+function removeItem(cat,i){
+extracted[cat].splice(i,1);
+if(!extracted[cat].length)delete extracted[cat];
+renderResults();
+}
+function saveAll(){
+Object.entries(extracted).forEach(([cat,items])=>{
+saved[cat]=[...(saved[cat]||[]),...items];
+});
+localStorage.setItem("adventra",JSON.stringify(saved));
+let summary=Object.entries(extracted).map(([c,a])=>
+`<div class="row"><strong>${c}</strong><span>${a.length} items</span></div>`
+).join("<hr>");
+document.getElementById("savedSummary").innerHTML=summary||"Nothing to save yet.";
+page("success");
+}
+function showLists(){
+let html="";
+Object.entries(saved).forEach(([cat,items])=>{
+html+=`<div class="category"><strong>${cat} (${items.length})</strong>`;
+items.forEach(it=>html+=`<div class="item"><span>${it.name}</span><span class="muted">${it.location}</span></div>`);
+html+="</div>";
+});
+document.getElementById("listContent").innerHTML=html||"No saved items yet.";
+page("lists");
+}
+</script>
+</body>
+</html>
